@@ -33,6 +33,9 @@ def get_driver_standings(season: int = current_season):
 
     results = pd.concat(races)
     summary = results.groupby(['DriverNumber', 'Abbreviation']).agg({'Points': 'sum'}).reset_index()
+    # test = results.groupby(['TeamName']).agg({'Points': 'sum'}).reset_index()
+    # test = test.sort_values(by='Points', ascending=False)
+    # print(test)
     summary = summary.sort_values(by='Points', ascending=False)
 
     all_race_results = pd.concat(race_results)
