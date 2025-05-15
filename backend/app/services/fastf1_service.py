@@ -18,16 +18,34 @@ def get_events(season: int = current_season):
 
 def get_driver_standings(season: int = current_season):
     races = []
+    race_results = []
     for event in get_events(season)['passed_events']:
         round_number = event['RoundNumber']
         session = ff1.get_session(season, round_number, 'R')
         session.load(telemetry=False, laps=False, weather=False, messages=False)
-        session.results['Position'] = np.where(np.isnan(session.results['Position']), None, session.results['Position'])
+        
+        results_df = session.results.copy()
+        results_df['RoundNumber'] = round_number
+        results_df['Position'] = np.where(np.isnan(results_df['Position']), None, results_df['Position'])
+
+        race_results.append(results_df[['DriverNumber', 'Abbreviation', 'Position', 'RoundNumber']])
         races.append(session.results)
 
     results = pd.concat(races)
-    summary = results.groupby(['DriverNumber', 'Abbreviation']).agg({'Points': 'sum', 'Position': list}).reset_index()
+    summary = results.groupby(['DriverNumber', 'Abbreviation']).agg({'Points': 'sum'}).reset_index()
+    # test = results.groupby(['TeamName']).agg({'Points': 'sum'}).reset_index()
+    # test = test.sort_values(by='Points', ascending=False)
+    # print(test)
     summary = summary.sort_values(by='Points', ascending=False)
+
+    all_race_results = pd.concat(race_results)
+    position_dict = {}
+    for driver in summary['DriverNumber']:
+        driver_results = all_race_results[all_race_results['DriverNumber'] == driver]
+        positions = {int(row['RoundNumber']): row['Position'] for _, row in driver_results.iterrows()}
+        position_dict[driver] = positions
+
+    summary['Positions'] = summary['DriverNumber'].map(position_dict)
 
     return {
         "season": season,

@@ -8,6 +8,6 @@ ff1 = fastf1_service
 def standings():
     return {
         #"events": ff1.get_events(2025),
-        "standings": ff1.get_driver_standings(2021),
+        "standings": ff1.get_driver_standings(),
         #"constructor_std": ff1.get_constructor_standings() 
     }
