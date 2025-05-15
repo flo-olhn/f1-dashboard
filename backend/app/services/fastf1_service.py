@@ -10,11 +10,15 @@ current_season = date.today().year
 def get_events(season: int = current_season):
     if season == current_season:
         return {
+            "season": season,
             "passed_events": ff1.get_event_schedule(season, include_testing=False)[ff1.get_event_schedule(season, include_testing=False)['Session5DateUtc'] < datetime.datetime.now()].to_dict(orient='records'),
             "upcoming_events": ff1.get_event_schedule(season, include_testing=False)[ff1.get_event_schedule(season, include_testing=False)['Session5DateUtc'] > pd.to_datetime(datetime.datetime.now())].to_dict(orient='records')
         }
     else:
-        return { "passed_events": ff1.get_event_schedule(season, include_testing=False).to_dict(orient='records') }
+        return { 
+            "season": season,
+            "passed_events": ff1.get_event_schedule(season, include_testing=False).to_dict(orient='records') 
+        }
 
 def get_standings(season: int = current_season):
     races = []
@@ -27,7 +31,7 @@ def get_standings(season: int = current_season):
         if event['EventFormat'] in ['sprint_qualifying', 'sprint', 'sprint_shootout']:
             sprint_session = ff1.get_session(season, round_number, 'Sprint')
             sprint_session.load(telemetry=False, laps=False, weather=False, messages=False)
-            # print(sprint_session.results[['Abbreviation', 'Position', 'Points']]) # printing drivers positions and points
+            
             sprint_results = sprint_session.results.copy()
             sprint_results['RoundNumber'] = round_number
             sprint_results['Position'] = np.where(np.isnan(sprint_results['Position']), None, sprint_results['Position'])
