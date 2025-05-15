@@ -7,7 +7,7 @@ ff1 = fastf1_service
 @router.get("/standings")
 def standings():
     return {
-        #"events": ff1.get_events(2025),
-        "standings": ff1.get_driver_standings(),
+        #"events": ff1.get_events(2021),
+        "standings": ff1.get_standings(),
         #"constructor_std": ff1.get_constructor_standings() 
     }
