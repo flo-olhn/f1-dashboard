@@ -1,13 +1,14 @@
-from fastapi import APIRouter, Depends
-from sqlalchemy.orm import Session
+from fastapi import APIRouter
 from services import fastf1_service
 from datetime import datetime
-from database import update_db
 from database.database import SessionLocal
-from database.models import Event
+from database.models import Season, Event
+
 
 router = APIRouter()
 ff1 = fastf1_service
+
+db = SessionLocal()
 
 
 @router.get("/standings")
@@ -24,12 +25,15 @@ async def standings(season: int):
 
 @router.get("/events")
 async def events():
+    season = datetime.now().year
+    data = db.query(Event).filter_by(year=season).all()
     return {
-        "events": ff1.get_events(datetime.now().year)
+        "events": data,
     }
 
 @router.get("/events/{season}")
 async def events(season: int):
+    data = db.query(Event).filter_by(year=season).all()
     return {
-        "events": ff1.get_events(season)
+        "events": data,
     }

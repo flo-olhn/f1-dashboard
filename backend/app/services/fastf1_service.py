@@ -17,7 +17,8 @@ def get_events(season: int = current_season):
     else:
         return { 
             "season": season,
-            "passed_events": ff1.get_event_schedule(season, include_testing=False).to_dict(orient='records') 
+            "passed_events": ff1.get_event_schedule(season, include_testing=False).to_dict(orient='records'),
+            "upcoming_events": [],
         }
 
 def get_standings(season: int = current_season):
