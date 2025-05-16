@@ -27,13 +27,10 @@ async def standings(season: int):
 @router.get("/events")
 async def events():
     data = db.query(Event).filter_by(year=current_season).all()
-    return {
-        "events": data,
-    }
+    return {"events": data}
+    
 
 @router.get("/events/{season}")
 async def events(season: int):
     data = db.query(Event).filter_by(year=season).all()
-    return {
-        "events": data,
-    }
+    return {"events": data}

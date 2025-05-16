@@ -23,7 +23,7 @@ def update():
     # 4. Check if season already exists
     season = db.query(Season).filter_by(id=season_year).first()
     if not season:
-        season = Season(id=season_year)
+        season = Season(id=season_year, created_at=datetime.datetime.now())
         db.add(season)
         db.commit()
         db.refresh(season)
@@ -52,6 +52,7 @@ def update():
                 session5 = e['Session5'],
                 session5_date= e['Session5DateUtc'],
                 status=status,
+                created_at=datetime.datetime.now()
             )
             db.add(event)
 
