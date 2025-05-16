@@ -17,6 +17,7 @@ class Event(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     season_id = Column(Integer, ForeignKey("seasons.id"))
+    season_year = Column(Integer)
     round = Column(Integer)
     name = Column(String)
     location = Column(String)

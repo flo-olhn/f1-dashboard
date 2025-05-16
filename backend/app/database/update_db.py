@@ -36,6 +36,7 @@ def update():
 
           event = Event(
               season_id=season.id,
+              season_year=season.year,
               round=e['RoundNumber'],
               name=e['EventName'],
               location=e['Location'],

@@ -12,7 +12,6 @@ ff1 = fastf1_service
 
 @router.get("/standings")
 async def standings():
-    update_db.update()
     return {
         "standings": ff1.get_standings(datetime.now().year),
     }
@@ -34,14 +33,3 @@ async def events(season: int):
     return {
         "events": ff1.get_events(season)
     }
-
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
-
-@router.get("/dev/events")
-def read_events(db: Session = Depends(get_db)):
-    return db.query(Event).all()
