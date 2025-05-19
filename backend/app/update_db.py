@@ -33,7 +33,10 @@ def update():
         for e in events:
             existing = db.query(Event).filter_by(year=season.id, round=e['RoundNumber']).first()
             if existing:
-                continue  # Skip if already in DB
+                # update event status if event is passed
+                if status == "upcoming" and e['Session5DateUtc'] < datetime.datetime.now():
+                    existing.status = "passed"
+                    db.commit()
 
             event = Event(
                 year=season.id,
